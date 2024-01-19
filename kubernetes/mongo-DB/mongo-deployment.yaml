@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-deployment
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: mongo 
+  serviceName: "mongo-service"
+  replicas: 2 
+  minReadySeconds: 10 
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongo-container
+        image: mongo:latest

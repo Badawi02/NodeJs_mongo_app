@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    stages {
+        stage('Deploy Argo') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f Argo/argo-namespace.yaml """
+                        sh """
+                        helm repo add argo-cd https://argoproj.github.io/argo-helm
+                        helm repo update
+                        AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} helm install argo-cd argo-cd/argo-cd -n argo --set server.service.port=8888
+                        """
+                        sh """ sleep 20 """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl -n argo get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d """
+                        sh """ echo 'username is admin' """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl port-forward svc/argo-cd-argocd-server -n argo 8888:8888 & """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f Argo/my-app.yaml """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline Successed!.'
+        }
+    }
+}

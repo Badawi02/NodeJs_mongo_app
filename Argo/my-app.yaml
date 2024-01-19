@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argo
+spec:
+  destination:
+    namespace: dev
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source: 
+    paths:
+      - path: kubernetes/nodejs-app/.
+      - path: kubernetes/mongo-DB/.
+    repoURL: 'https://github.com/Badawi02/k_task.git'
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true #to Create osos namespace automatically
+    automated:
+      selfHeal: true #to make synchronization with githube repo with any manual changes in cluster
+      prune: true #if we delete or change any thing in the files apply them to the cluster
