@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: mongoBD_network_policy
+  name: mongodb_network_policy
   namespace: dev
 spec:
   podSelector:
