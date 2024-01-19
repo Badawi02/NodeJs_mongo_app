@@ -9,16 +9,14 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: default
   source: 
+    paths:
+      - path: kubernetes/nodejs-app/.
+      - path: kubernetes/mongo-DB/.
     repoURL: 'https://github.com/Badawi02/test.git'
     targetRevision: HEAD
-    paths:
-    	path: 
-      	- kubernetes/nodejs-app/.
-      	- kubernetes/mongo-DB/.
   syncPolicy:
     syncOptions:
     - CreateNamespace=true #to Create osos namespace automatically
     automated:
-      selfHeal: true #to make synchronization with GitHub repo with any manual changes in the cluster
-      prune: true #if we delete or change anything in the files, apply them to the cluster
-
+      selfHeal: true #to make synchronization with githube repo with any manual changes in cluster
+      prune: true #if we delete or change any thing in the files apply them to the cluster
