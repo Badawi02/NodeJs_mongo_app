@@ -11,9 +11,10 @@ spec:
   source: 
     repoURL: 'https://github.com/Badawi02/test.git'
     targetRevision: HEAD
-    path: 
-      - kubernetes/nodejs-app/.
-      - kubernetes/mongo-DB/.
+    paths:
+    	path: 
+      	- kubernetes/nodejs-app/.
+      	- kubernetes/mongo-DB/.
   syncPolicy:
     syncOptions:
     - CreateNamespace=true #to Create osos namespace automatically
