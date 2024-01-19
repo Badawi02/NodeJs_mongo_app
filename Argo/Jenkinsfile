@@ -15,7 +15,8 @@ pipeline {
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl -n argo get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d """
                         sh """ echo 'username is admin' """
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl port-forward svc/argo-cd-argocd-server -n argo 8080:443 & """
-                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f Argo/my-app.yaml """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f Argo/my-app-nodejs.yaml """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f Argo/my-db-mongo.yaml """
                     }
                 }
             }
