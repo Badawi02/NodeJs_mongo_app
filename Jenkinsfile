@@ -2,8 +2,8 @@ pipeline {
     agent any
     environment {
         USER_ID  = credentials('AWS_USER_ID')
-        // AWS_ACCESS_KEY_ID  = credentials('AWS_ACCESS_KEY_ID')
-        // AWS_SECRET_ACCESS_KEY  = credentials('AWS_ACCESS_KEY_ID')
+        ACCESS_KEY  = credentials('AWS_ACCESS_KEY_ID')
+        SECRET_KEY  = credentials('AWS_ACCESS_KEY_ID')
     }
     stages {
         stage('Test') {
@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 script{
-                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_ACCESS_KEY_ID')]){
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
                         sh """aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${USER_ID}.dkr.ecr.us-east-1.amazonaws.com """
                         sh """ docker build -t node-js_app:${BUILD_NUMBER} app/. """
                         sh """ docker tag node-js_app:${BUILD_NUMBER} ${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER} """
