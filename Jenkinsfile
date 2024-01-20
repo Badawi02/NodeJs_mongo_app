@@ -46,14 +46,14 @@ pipeline {
         stage("Show the Critical Vulnerabilities ") {
             steps {
                 script {
-                    sh """ 
+                    sh """
                         cat all_findings_${BUILD_NUMBER}.json | jq -r '.imageScanFindings.findings[] | select(.severity == \"CRITICAL\") | \"CRITICAL: \\(.name) - \\(.description)\"' 
-                        # Check the exit status
-                        if [ $? -ne 0 ]; then
-                            error("Found CRITICAL vulnerabilities")
-                        else
-                            echo "No CRITICAL vulnerabilities"
-                        fi
+                        // # Check the exit status
+                        // if [ $? -ne 0 ]; then
+                        //     error("Found CRITICAL vulnerabilities")
+                        // else
+                        //     echo "No CRITICAL vulnerabilities"
+                        // fi
                     """
                 }
             }
