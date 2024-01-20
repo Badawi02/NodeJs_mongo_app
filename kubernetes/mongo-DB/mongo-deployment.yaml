@@ -19,3 +19,10 @@ spec:
       containers:
       - name: mongo-container
         image: mongo:latest
+        volumeMounts:
+            - name: app-data
+              mountPath: /app_volume
+      volumes:
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: app-pv-claim
