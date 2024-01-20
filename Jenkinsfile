@@ -43,13 +43,13 @@ pipeline {
             }
         }
 
-        // stage("Show the Critical Vulnerabilities ") {
-        //     steps {
-        //         script {
-        //             sh """ cat all_findings_${BUILD_NUMBER}.json | jq -r '.imageScanFindings.findingSeverityCounts.CRITICAL as $critical | .imageScanFindings.findings[] | select(.severity == "CRITICAL") | "($critical) CRITICAL: (.name) - (.description)"'  """
-        //         }
-        //     }
-        // }
+        stage("Show the Critical Vulnerabilities ") {
+            steps {
+                script {
+                    sh """ cat all_findings_${BUILD_NUMBER}.json | jq -r '.imageScanFindings.findingSeverityCounts.CRITICAL as $critical | .imageScanFindings.findings[] | select(.severity == "CRITICAL") | "($critical) CRITICAL: (.name) - (.description)"'  """
+                }
+            }
+        }
         
         stage('deploy') {
             steps {
