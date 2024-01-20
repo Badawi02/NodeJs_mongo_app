@@ -37,24 +37,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
                         def imageUri = "node-js_app"
-                        def scanResults = sh(script: "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr describe-image-scan-findings --repository-name '${imageUri}' --image-id imageTag='${BUILD_NUMBER}' --region us-east-1")
-                        def parsedFindings = new JsonSlurper().parseText(scanResults.join('\n'))
-                        def criticalFindings = []
-                        parsedFindings.findings.each { finding ->
-                            if (finding.severity == "CRITICAL") {
-                                criticalFindings << finding
-                            }
-                        }
-                        // Decision logic based on criticalFindings list
-                        if (criticalFindings) {
-                            // Fail the build
-                            error "Critical vulnerabilities found in image: ${imageUri}"
-                            // Send notifications
-                            // ...
-                        } else {
-                            echo "No critical vulnerabilities detected in image."
-                        }
-                        }
+                        def scanResults = sh(script: "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr describe-image-scan-findings --repository-name '${imageUri}' --image-id imageTag='${BUILD_NUMBER}' --region us-east-1" | jq -r '.imageScanFindings.findingSeverityCounts.CRITICAL as $critical | .imageScanFindings.findings[] | select(.severity == "CRITICAL") | "\($critical) CRITICAL: \(.name) - \(.description)"')  
                 }
             }
         }
