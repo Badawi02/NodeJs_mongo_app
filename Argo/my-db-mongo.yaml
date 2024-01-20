@@ -6,8 +6,8 @@ metadata:
 spec:
   destination:
     namespace: dev
-    server: 'https://kubernetes.default.svc'
-  project: default
+    server: 'https://kubernetes.mongo-service.svc'
+  project: mongo-service
   source: 
     path: kubernetes/mongo-DB/.
     repoURL: 'https://github.com/Badawi02/test.git'
