@@ -36,7 +36,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
                         def ecrImage = '${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER}'
-                        sh "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=$(AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr describe-images --repository-name node-js_app --image-ids imageTag=latest --query 'images[*].imageDigest' --output json) --output json"   
+                        sh "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=$(AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr describe-images --repository-name node-js_app --image-ids imageTag=${BUILD_NUMBER} --query 'images[*].imageDigest' --output json) --output json"   
                     }
                 }
             }
