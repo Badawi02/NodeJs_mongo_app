@@ -35,7 +35,7 @@ pipeline {
             steps {
                 script {
                     def ecrImage = '${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER}'
-                    sh "sh aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=\$(aws ecr batch-check-layer-availability --repository-name node-js_app --image-digests \$(aws ecr list-images --repository-name node-js_app --filter tagStatus=TAGGED --query 'imageIds[*].imageDigest' --output json) --query 'layersToScan[*].layerDigest' --output json) --output json "
+                    sh " aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=\$(aws ecr batch-check-layer-availability --repository-name node-js_app --image-digests \$(aws ecr list-images --repository-name node-js_app --filter tagStatus=TAGGED --query 'imageIds[*].imageDigest' --output json) --query 'layersToScan[*].layerDigest' --output json) --output json "
                 }
             }
         }
