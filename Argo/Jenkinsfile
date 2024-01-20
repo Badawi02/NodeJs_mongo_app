@@ -9,7 +9,7 @@ pipeline {
                         sh """
                         helm repo add argo-cd https://argoproj.github.io/argo-helm
                         helm repo update
-                        AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} helm install argo-cd argo-cd/argo-cd -n argo --set server.service.port=8888
+                        AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} helm install argo-cd argo-cd/argo-cd -n argo
                         """
                         sh """ sleep 20 """
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl -n argo get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d """
