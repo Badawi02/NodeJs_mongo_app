@@ -34,12 +34,14 @@ pipeline {
         stage('Scan ECR Image') {
             steps {
                 script {
-                    def ecrImage = '${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER}'
-                    sh "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=\$(AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr batch-check-layer-availability --repository-name node-js_app --image-digests \$(AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr list-images --repository-name node-js_app --filter tagStatus=TAGGED --query 'imageIds[*].imageDigest' --output json) --query 'layersToScan[*].layerDigest' --output json) --output json "
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
+                        def ecrImage = '${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER}'
+                        sh "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=\$(AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr batch-check-layer-availability --repository-name node-js_app --image-digests \$(AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr list-images --repository-name node-js_app --filter tagStatus=TAGGED --query 'imageIds[*].imageDigest' --output json) --query 'layersToScan[*].layerDigest' --output json) --output json "   
+                    }
                 }
             }
         }
-
+        
         stage('deploy') {
             steps {
                 script{
