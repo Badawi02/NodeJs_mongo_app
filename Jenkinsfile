@@ -49,9 +49,10 @@ pipeline {
                     // sh """ cat all_findings_${BUILD_NUMBER}.json | jq -r '.imageScanFindings.findings[] | select(.severity == \"CRITICAL\") | \"CRITICAL: \\(.name) - \\(.description)\"' """
                     def criticalFindings = sh(script: 'cat all_findings_${BUILD_NUMBER}.json | jq -r \'.imageScanFindings.findings[] | select(.severity == "CRITICAL") | "CRITICAL: \\(.name) - \\(.description)"\'', returnStatus: true, returnStdout: true).trim()
 
-                    if (criticalFindings) {
+                    if (criticalFindings != 0) {
                         error("CRITICAL vulnerabilities found: ${criticalFindings}")
-                    }                                                                                                                       
+                    }
+
                 }
             }
         }
