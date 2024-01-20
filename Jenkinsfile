@@ -2,8 +2,6 @@ pipeline {
     agent any
     environment {
         USER_ID  = credentials('AWS_USER_ID')
-        AWS_ACCESS_KEY_ID  = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY  = credentials('AWS_ACCESS_KEY_ID')
     }
     stages {
         stage('Test') {
@@ -21,16 +19,14 @@ pipeline {
         stage('Build') {
             steps {
                 script{
-                    // withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
-                        sh "aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}"
-                        sh "aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}"
-                        sh """aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${USER_ID}.dkr.ecr.us-east-1.amazonaws.com """
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
+                        sh """AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${USER_ID}.dkr.ecr.us-east-1.amazonaws.com """
                         sh """ docker build -t node-js_app:${BUILD_NUMBER} app/. """
                         sh """ docker tag node-js_app:${BUILD_NUMBER} ${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER} """
                         sh """ docker push ${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER} """
                         sh """ echo ${BUILD_NUMBER} > ../node-js_app-build-number.txt """
                         sh """ echo ${USER_ID} > ../node-js_app-user-id.txt """
-                    // }
+                    }
                 }
             }
         }
