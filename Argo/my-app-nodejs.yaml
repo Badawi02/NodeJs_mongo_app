@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     namespace: dev
-    server: 'https://kubernetes.default.svc'
+    server: 'https://kubernetes.app-svc.svc'
   project: default
   source: 
     path: kubernetes/nodejs-app/.
