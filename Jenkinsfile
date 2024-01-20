@@ -37,8 +37,8 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
                         def imageUri = "node-js_app"
-                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr describe-image-scan-findings --repository-name '${imageUri}' --image-id imageTag='${BUILD_NUMBER}' --region us-east-1 > all_findings_${BUILD_NUMBER}.json """   
-                        sh """ jq -r '.imageScanFindings.findings[] | select(.severity == "CRITICAL") | "(.name) - (.description)"' all_findings_${BUILD_NUMBER}.json """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr describe-image-scan-findings --repository-name '${imageUri}' --image-id imageTag='${BUILD_NUMBER}' --region us-east-1 > all_findings.json """   
+                        sh """ jq -r '.imageScanFindings.findings[] | select(.severity == "CRITICAL") | "(.name) - (.description)"' all_findings.json """
                 }
             }
         }
