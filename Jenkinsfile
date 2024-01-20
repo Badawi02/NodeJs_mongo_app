@@ -46,7 +46,7 @@ pipeline {
         stage("Show the Critical Vulnerabilities ") {
             steps {
                 script {
-                    sh """ cat all_findings.json | jq -r '.imageScanFindings.findings[] | select(.severity == "CRITICAL") | "CRITICAL: (.name) - (.description)"'  """
+                    sh """ cat all_findings.json | jq -r '.imageScanFindings.findings[] | select(.severity == "CRITICAL") | "CRITICAL: \(.name) - \(.description)"'  """
                 }
             }
         }
