@@ -31,32 +31,32 @@ pipeline {
             }
         }
         
-        // stage('Scan ECR Image') {
-        //     steps {
-        //         script {
-        //             def ecrImage = '${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER}'
-        //             sh "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=\$(aws ecr batch-check-layer-availability --repository-name node-js_app --image-digests \$(aws ecr list-images --repository-name node-js_app --filter tagStatus=TAGGED --query 'imageIds[*].imageDigest' --output json) --query 'layersToScan[*].layerDigest' --output json) --output json "
-        //         }
-        //     }
-        // }
+        stage('Scan ECR Image') {
+            steps {
+                script {
+                    def ecrImage = '${USER_ID}.dkr.ecr.us-east-1.amazonaws.com/node-js_app:${BUILD_NUMBER}'
+                    sh "AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws ecr start-image-scan --repository-name node-js_app --image-id imageDigest=\$(aws ecr batch-check-layer-availability --repository-name node-js_app --image-digests \$(aws ecr list-images --repository-name node-js_app --filter tagStatus=TAGGED --query 'imageIds[*].imageDigest' --output json) --query 'layersToScan[*].layerDigest' --output json) --output json "
+                }
+            }
+        }
 
-    //     stage('deploy') {
-    //         steps {
-    //             script{
-    //                 withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
-    //                     sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws eks --region us-east-1 update-kubeconfig --name cluster """
-    //                     sh """ export BUILD_NUMBER=\$(cat ../node-js_app-build-number.txt) """
-    //                     sh """ export USER_ID=\$(cat ../node-js_app-user-id.txt) """
-    //                     sh """ mv kubernetes/nodejs-app/node-app-deployment.yaml kubernetes/nodejs-app/node-app-deployment.yaml.tmp """
-    //                     sh """ cat kubernetes/nodejs-app/node-app-deployment.yaml.tmp | envsubst > kubernetes/nodejs-app/node-app-deployment.yaml """
-    //                     sh """ rm -f kubernetes/nodejs-app/node-app-deployment.yaml.tmp """
-    //                     sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/NameSpaces """
-    //                     sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/nodejs-app """
-    //                     sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/mongo-DB """
-    //                 }
-    //             }
-    //         }
-    //     }
+        stage('deploy') {
+            steps {
+                script{
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} aws eks --region us-east-1 update-kubeconfig --name cluster """
+                        sh """ export BUILD_NUMBER=\$(cat ../node-js_app-build-number.txt) """
+                        sh """ export USER_ID=\$(cat ../node-js_app-user-id.txt) """
+                        sh """ mv kubernetes/nodejs-app/node-app-deployment.yaml kubernetes/nodejs-app/node-app-deployment.yaml.tmp """
+                        sh """ cat kubernetes/nodejs-app/node-app-deployment.yaml.tmp | envsubst > kubernetes/nodejs-app/node-app-deployment.yaml """
+                        sh """ rm -f kubernetes/nodejs-app/node-app-deployment.yaml.tmp """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/NameSpaces """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/nodejs-app """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/mongo-DB """
+                    }
+                }
+            }
+        }
     }
 
     post {
