@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
-                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f sonarqube/sonarqube-namespace.yaml """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f SonarQube/sonarqube-namespace.yaml """
                         sh """
                         helm repo add stable https://charts.helm.sh/stable
                         helm repo update
