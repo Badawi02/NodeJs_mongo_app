@@ -1,0 +1,7 @@
+## values.yaml
+sonarqube:
+  image:
+    repository: sonarqube
+    tag: 8.0-community
+  postgresql:
+    postgresPassword: examplepassword
