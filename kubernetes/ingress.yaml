@@ -19,4 +19,4 @@ spec:
           service:
             name: app-svc
             port:
-              number: 31000
+              number: 80
