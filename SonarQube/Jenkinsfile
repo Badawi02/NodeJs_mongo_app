@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    stages {
+        stage('Deploy sonarqube') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'ACCESS_KEY'), string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'SECRET_KEY')]){
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f sonarqube/sonarqube-namespace.yaml """
+                        sh """
+                        helm repo add stable https://charts.helm.sh/stable
+                        helm repo update
+                        AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} helm install sonarqube stable/sonarqube
+                        """
+                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl port-forward service/sonarqube-sonarqube 9000:9000 & """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline Successed!.'
+        }
+    }
+}
