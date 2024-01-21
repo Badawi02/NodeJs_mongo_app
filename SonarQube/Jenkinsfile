@@ -9,7 +9,7 @@ pipeline {
                         sh """
                         helm repo add stable https://charts.helm.sh/stable
                         helm repo update
-                        AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} helm install sonarqube stable/sonarqube -f values.yaml
+                        AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} helm install sonarqube stable/sonarqube -f SonarQube/values.yaml
                         """
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl port-forward service/sonarqube-sonarqube 9000:9000 & """
                     }
