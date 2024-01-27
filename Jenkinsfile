@@ -16,7 +16,6 @@ pipeline {
                             source "$NVM_DIR/nvm.sh"
                         else
                             echo "Error: nvm.sh not found or empty"
-                            exit 1
                         fi
                         nvm install 18.17.0
                         nvm use 18.17.0
