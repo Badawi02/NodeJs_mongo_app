@@ -7,26 +7,15 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Set the NVM_DIR environment variable
-                    withEnv(['NVM_DIR=$HOME/.nvm']) {
-                        sh """
-                        export NVM_DIR="$HOME/.nvm"
-                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-                        if [ -s "\$NVM_DIR/nvm.sh" ]; then
-                            source "$NVM_DIR/nvm.sh"
-                        else
-                            echo "Error: nvm.sh not found or empty"
-                        fi
-                        nvm install 18.17.0
-                        nvm use 18.17.0
-                        cd app
-                        npm install
-                        npm run test
-                        """
-                    }
+                    sh """
+                    cd app
+                    npm install
+                    npm run test
+                    """
                 }
             }
         }
+
 
         stage('Build') {
             steps {
@@ -59,7 +48,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        cat all_findings_${BUILD_NUMBER}.json | jq -r '.imageScanFindings.findings[] | select(.severity == \"CRITICAL\") | \"CRITICAL: \\(.name) - \\(.description)\"' 
+                        cat all_findings_${BUILD_NUMBER}.json | jq -r '.imageScanFindings.findings[] | select(.severity == \"CRITICAL\") | \"CRITICAL: \\(.name) - \\(.description)\"'
                     """
                 }
             }
@@ -78,9 +67,6 @@ pipeline {
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/NameSpaces """
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/nodejs-app """
                         sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/mongo-DB """
-                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/ingress_controller.yaml """
-                        sh """ sleep 30 """
-                        sh """ AWS_ACCESS_KEY_ID=${ACCESS_KEY} AWS_SECRET_ACCESS_KEY=${SECRET_KEY} kubectl apply -f kubernetes/ingress.yaml """
                     }
                 }
             }
