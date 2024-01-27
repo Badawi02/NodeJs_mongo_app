@@ -10,8 +10,6 @@ pipeline {
                     // Set the NVM_DIR environment variable
                     withEnv(['NVM_DIR=$HOME/.nvm']) {
                         sh """
-                        sudo apt update -y
-                        sudo apt install npm -y
                         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
                         export NVM_DIR="$HOME/.nvm"
                         [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
