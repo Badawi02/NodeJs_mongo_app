@@ -10,10 +10,10 @@ pipeline {
                     // Set the NVM_DIR environment variable
                     withEnv(['NVM_DIR=$HOME/.nvm']) {
                         sh """
-                        export NVM_DIR="$HOME/.nvm"
+                        // export NVM_DIR="$HOME/.nvm"
                         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
                         if [ -s "\$NVM_DIR/nvm.sh" ]; then
-                            source "\$NVM_DIR/nvm.sh"
+                            source "$NVM_DIR/nvm.sh"
                         else
                             echo "Error: nvm.sh not found or empty"
                             exit 1
