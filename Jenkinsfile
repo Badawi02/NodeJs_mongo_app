@@ -7,21 +7,25 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh """
-                    sudo apt update -y
-                    sudo apt install npm -y
-                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-                    export NVM_DIR="$HOME/.nvm"
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    nvm install 18.17.0
-                    nvm use 18.17.0
-                    cd app
-                    npm install
-                    npm run test
-                    """
+                    // Set the NVM_DIR environment variable
+                    withEnv(['NVM_DIR=$HOME/.nvm']) {
+                        sh """
+                        sudo apt update -y
+                        sudo apt install npm -y
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+                        export NVM_DIR="$HOME/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                        nvm install 18.17.0
+                        nvm use 18.17.0
+                        cd app
+                        npm install
+                        npm run test
+                        """
+                    }
                 }
             }
         }
+    }
 
         stage('Build') {
             steps {
