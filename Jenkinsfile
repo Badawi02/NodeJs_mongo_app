@@ -10,8 +10,9 @@ pipeline {
                     // Set the NVM_DIR environment variable
                     withEnv(['NVM_DIR=$HOME/.nvm']) {
                         sh """
-                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
                         export NVM_DIR="$HOME/.nvm"
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+                        
                         [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                         nvm install 18.17.0
                         nvm use 18.17.0
