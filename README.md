@@ -39,7 +39,7 @@
 - Clone The Code
 
 ```bash
-  git clone https://gitlab.com/kashier1/node.js_app.git
+  git clone https://github.com/Badawi02/NodeJs_mongo_app.git
 ```
 - Setup your AWS account credentials
 
